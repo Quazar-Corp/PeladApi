@@ -14,11 +14,13 @@
 
 (def default_owner "Onofre")
 (def default_hour "20hrs - 22hrs")
+(def default_day "Quarta")
 
 (defn list-string
   "Format the string with the given values"
-  [date hour owner]
-   (str "*Lista pelada Quarta " date
+  [date day hour owner]
+   (str "*Lista pelada " day
+        " " date
         " PN Boulevard, " hour
         "*\n\n"
         "*Goleiros*\n" "1.\n2."
@@ -33,9 +35,10 @@
 
 (defn weekly-list
   "Generate the weekly list for the pelada"
-  ([] (list-string (get-next-wednesday) default_hour default_owner))
-  ([date] (list-string date default_hour default_owner))
-  ([date hour] (list-string date hour default_owner)))
+  ([] (list-string (get-next-wednesday) default_day default_hour default_owner))
+  ([date] (list-string date default_day default_hour default_owner))
+  ([date day] (list-string date day default_hour default_owner))
+  ([date day hour] (list-string date day hour default_owner)))
 
 (println (weekly-list))
 
