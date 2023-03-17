@@ -1,4 +1,10 @@
-(ns pelada.list-handler)
+(ns pelada.list-handler
+  (:require [clojure.string :as str]))
+
+; DEFAULT VALUES
+(def default_owner "Onofre")
+(def default_hour "20hrs - 22hrs")
+(def default_day "Quarta")
 
 (defn- get-next-wednesday
  "Retrieve the formatted date of the next Wednesday" 
@@ -11,10 +17,6 @@
         next-wednesday (.plusDays now (Math/max days-to-next-wednesday 0))
         formatter (java.time.format.DateTimeFormatter/ofPattern "dd/MM")]
     (.format next-wednesday formatter)))
-
-(def default_owner "Onofre")
-(def default_hour "20hrs - 22hrs")
-(def default_day "Quarta")
 
 (defn- list-string
   "Format the string with the given values"
@@ -39,3 +41,14 @@
   ([date] (list-string date default_day default_hour default_owner))
   ([date day] (list-string date day default_hour default_owner))
   ([date day hour] (list-string date day hour default_owner)))
+
+; PROCESSMENT
+(defn parser
+  "This function exists because even that the application know the format of the list
+  it can't just trust in the user, so this function will create format that will be
+  legible to the application."
+  [filepath]
+  (let [string-list (slurp filepath) ; TODO: error handling
+        lines-list (str/split-lines string-list)]
+    (map #(println "\n>>>" % "\n") lines-list)))
+
