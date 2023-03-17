@@ -1,5 +1,6 @@
 (ns pelada.list-handler
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str])
+  (:require [clojure.core.match :as m]))
 
 ; DEFAULT VALUES
 (def default_owner "Onofre")
@@ -43,12 +44,21 @@
   ([date day hour] (list-string date day hour default_owner)))
 
 ; PROCESSMENT
+(defn get-set-list
+  [lines-list set-name]
+  (m/match [set-name]
+           [:goalkeeper] "goalkeeper"
+           [:players] "players"
+           [:substitutes] "substitutes"
+           [:guests] "guests"))
+
 (defn parser
   "This function exists because even that the application know the format of the list
   it can't just trust in the user, so this function will create format that will be
   legible to the application."
   [filepath]
-  (let [string-list (slurp filepath) ; TODO: error handling
-        lines-list (str/split-lines string-list)]
-    (map #(println "\n>>>" % "\n") lines-list)))
+  (let [string-list (str/trim (slurp filepath)) ; TODO: error handling
+        lines-list (str/split-lines string-list)
+        goalkeepers-list (get-set-list lines-list :goalkeeper)]
+    (println goalkeepers-list)))
 
