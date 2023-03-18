@@ -43,14 +43,24 @@
   ([date day] (list-string date day default_hour default_owner))
   ([date day hour] (list-string date day hour default_owner)))
 
+(defn- sublist
+  "The main function of the function get-set-list.
+  Responsible for retrieve teh sublist and remove the head(set name)"
+  ([lines-list from] (rest (subvec lines-list (.indexOf lines-list from) (- (count lines-list) 1)))) 
+  ([lines-list from to] 
+  (let [fromIndex (.indexOf lines-list from)
+        toIndex (.indexOf lines-list to)]
+    (rest (subvec lines-list fromIndex toIndex)))))
+  
 ; PROCESSMENT
-(defn get-set-list
+(defn- get-set-list
+  "This function returns the sublist given the name of the set"
   [lines-list set-name]
   (m/match [set-name]
-           [:goalkeeper] "goalkeeper"
-           [:players] "players"
-           [:substitutes] "substitutes"
-           [:guests] "guests"))
+           [:goalkeepers] (sublist lines-list "Goleiros" "Jogadores")
+           [:players] (sublist lines-list "Jogadores" "Suplentes")
+           [:substitutes] (sublist lines-list "Suplentes" "Convidados")
+           [:guests] (sublist lines-list "Convidados")))
 
 (defn parser
   "This function exists because even that the application know the format of the list
@@ -59,6 +69,11 @@
   [filepath]
   (let [string-list (str/trim (slurp filepath)) ; TODO: error handling
         lines-list (str/split-lines string-list)
-        goalkeepers-list (get-set-list lines-list :goalkeeper)]
-    (println goalkeepers-list)))
-
+        goalkeepers-list (get-set-list lines-list :goalkeepers)
+        players-list (get-set-list lines-list :players)
+        substitutes-list (get-set-list lines-list :substitutes)
+        guests-list (get-set-list lines-list :guests)]
+    (println goalkeepers-list)
+    (println players-list)
+    (println substitutes-list)
+    (println guests-list)))
