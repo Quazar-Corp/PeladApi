@@ -60,7 +60,7 @@
            [:goalkeepers] (sublist lines-list "Goleiros" "Jogadores")
            [:players] (sublist lines-list "Jogadores" "Suplentes")
            [:substitutes] (sublist lines-list "Suplentes" "Convidados")
-           [:guests] (sublist lines-list "Convidados")))
+           [:guests] (sublist lines-list "Convidados" "Comunicados")))
 
 (defn parser
   "This function exists because even that the application know the format of the list
@@ -73,7 +73,7 @@
         players-list (get-set-list lines-list :players)
         substitutes-list (get-set-list lines-list :substitutes)
         guests-list (get-set-list lines-list :guests)]
-    (println goalkeepers-list)
-    (println players-list)
-    (println substitutes-list)
-    (println guests-list)))
+    {:goalkeepers goalkeepers-list
+     :players players-list
+     :substitutes substitutes-list
+     :guests guests-list}))
