@@ -1,4 +1,11 @@
-(ns pelada.list-handler)
+(ns pelada.list-handler
+  (:require [clojure.string :as str])
+  (:require [clojure.core.match :as m]))
+
+; DEFAULT VALUES
+(def default_owner "Onofre")
+(def default_hour "20hrs - 22hrs")
+(def default_day "Quarta")
 
 (defn- get-next-wednesday
  "Retrieve the formatted date of the next Wednesday" 
@@ -11,10 +18,6 @@
         next-wednesday (.plusDays now (Math/max days-to-next-wednesday 0))
         formatter (java.time.format.DateTimeFormatter/ofPattern "dd/MM")]
     (.format next-wednesday formatter)))
-
-(def default_owner "Onofre")
-(def default_hour "20hrs - 22hrs")
-(def default_day "Quarta")
 
 (defn- list-string
   "Format the string with the given values"
@@ -39,3 +42,38 @@
   ([date] (list-string date default_day default_hour default_owner))
   ([date day] (list-string date day default_hour default_owner))
   ([date day hour] (list-string date day hour default_owner)))
+
+(defn- sublist
+  "The main function of the function get-set-list.
+  Responsible for retrieve teh sublist and remove the head(set name)"
+  ([lines-list from] (rest (subvec lines-list (.indexOf lines-list from) (- (count lines-list) 1)))) 
+  ([lines-list from to] 
+  (let [fromIndex (.indexOf lines-list from)
+        toIndex (.indexOf lines-list to)]
+    (rest (subvec lines-list fromIndex toIndex)))))
+  
+; PROCESSMENT
+(defn- get-set-list
+  "This function returns the sublist given the name of the set"
+  [lines-list set-name]
+  (m/match [set-name]
+           [:goalkeepers] (sublist lines-list "Goleiros" "Jogadores")
+           [:players] (sublist lines-list "Jogadores" "Suplentes")
+           [:substitutes] (sublist lines-list "Suplentes" "Convidados")
+           [:guests] (sublist lines-list "Convidados" "Comunicados")))
+
+(defn parser
+  "This function exists because even that the application know the format of the list
+  it can't just trust in the user, so this function will create format that will be
+  legible to the application."
+  [filepath]
+  (let [string-list (str/trim (slurp filepath)) ; TODO: error handling
+        lines-list (str/split-lines string-list)
+        goalkeepers-list (get-set-list lines-list :goalkeepers)
+        players-list (get-set-list lines-list :players)
+        substitutes-list (get-set-list lines-list :substitutes)
+        guests-list (get-set-list lines-list :guests)]
+    {:goalkeepers goalkeepers-list
+     :players players-list
+     :substitutes substitutes-list
+     :guests guests-list}))
