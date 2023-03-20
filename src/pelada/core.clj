@@ -1,5 +1,6 @@
 (ns pelada.core
-  (:require [pelada.list-handler :as list-handler]))
+  (:require [pelada.list-handler :as list-handler])
+  (:require [pelada.pelada-manager :as manager]))
   
 ;(println "****** Test Zone ******\n\n")
 ;(println ">>> Generating the weekly list with default values\n\n")
