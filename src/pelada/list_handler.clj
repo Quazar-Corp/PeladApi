@@ -43,6 +43,14 @@
   ([date day] (list-string date day default_hour default_owner))
   ([date day hour] (list-string date day hour default_owner)))
 
+  
+; PROCESSMENT
+(defn- remove-number-from-list
+  "Remove the number of the player in the list"
+  [string]
+  (->> (str/split string #"\.")
+       second))
+
 (defn- sublist
   "The main function of the function get-set-list.
   Responsible for retrieve teh sublist and remove the head(set name)"
@@ -50,9 +58,11 @@
   ([lines-list from to] 
   (let [fromIndex (.indexOf lines-list from)
         toIndex (.indexOf lines-list to)]
-    (rest (subvec lines-list fromIndex toIndex)))))
-  
-; PROCESSMENT
+    (->> (subvec lines-list fromIndex toIndex)
+         (rest)
+         (filter #(not= % ""))
+         (map remove-number-from-list)))))
+
 (defn- get-set-list
   "This function returns the sublist given the name of the set"
   [lines-list set-name]
