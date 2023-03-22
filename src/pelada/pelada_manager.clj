@@ -22,3 +22,19 @@
         [second-team players-list-2] (team-maker-random '() players-list-1)
         [third-team _] (team-maker-random '() players-list-2)]
     [first-team second-team third-team]))
+
+;(defn- print-team
+;  [team]
+;  (print-str 
+;    (doseq [x team]
+;      (format "%s\n" x))))
+(defn print-team [team]
+  (apply str (interpose "\n" team)))
+
+(defn print-teams
+  [[t1 t2 t3]]
+  (println (format "Time 1:\n%s" (print-team t1)))
+  (println)
+  (println (format "Time 2:\n%s" (print-team t2)))
+  (println)
+  (println (format "Time 3:\n%s" (print-team t3))))
