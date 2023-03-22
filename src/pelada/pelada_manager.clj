@@ -41,3 +41,9 @@
   (println (format "Time 2:\n%s" (print-team t2)))
   (println)
   (println (format "Time 3:\n%s" (print-team t3))))
+
+(defn portaria-format
+  "Prints a list formatted to send to the portaria"
+  [pelada]
+  (doseq [x (:players pelada)]
+    (println x)))

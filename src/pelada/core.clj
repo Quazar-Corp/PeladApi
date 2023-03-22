@@ -1,7 +1,5 @@
 (ns pelada.core
-  (:require [pelada.list-handler :as list-handler])
-  (:require [pelada.pelada-manager :as manager]))
-  
+ (:require [pelada.command :as cmd])) 
 ;(println "****** Test Zone ******\n\n")
 ;(println ">>> Generating the weekly list with default values\n\n")
 ;(println (list-handler/weekly-list))
@@ -16,9 +14,8 @@
 
 (defn -main
   [& args]
-  (let [sample-file (nth args 0)]
-    (->> sample-file
-         (manager/to-pelada-object)
-         (manager/team-maker)
-         (manager/print-teams)))
-  )
+  (if (< (count args) 2)
+    (cmd/command-handler "" "")
+    (let [filepath (nth args 0)
+          command (nth args 1)]
+      (cmd/command-handler filepath command)))) 
