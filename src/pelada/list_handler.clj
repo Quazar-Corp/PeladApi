@@ -46,6 +46,7 @@
   
 ; PROCESSMENT
 (defn- remove-number-from-list
+  "Remove the number of the player in the list"
   [string]
   (->> (str/split string #"\.")
        second))
