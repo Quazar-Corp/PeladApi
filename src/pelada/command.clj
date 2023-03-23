@@ -36,6 +36,6 @@
   [command filepath]
   (m/match [command]
            ["--make-teams"] (team-maker-flow filepath)
-           ["--list-portaria"] (concierge-list-flow filepath)
+           ["--list-concierge"] (concierge-list-flow filepath)
            ["--h"] (println commands-string)
            [_] (print-help-invalid-command)))
