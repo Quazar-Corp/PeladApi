@@ -43,7 +43,7 @@
   (println (format "Time 3:\n%s" (print-team t3))))
 
 (defn concierge-format
-  "Prints a list formatted to send to the portaria"
+  "Prints a list formatted to send to the concierge"
   [pelada]
   (doseq [e (:players pelada)]
     (println e)))
