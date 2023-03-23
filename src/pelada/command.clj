@@ -24,18 +24,18 @@
        (manager/team-maker)
        (manager/print-teams)))
 
-(defn portaria-list-flow
+(defn concierge-list-flow
   "Command flow to --list-portaria"
   [filepath] 
   (->> filepath
        (manager/to-pelada-object)
-       (manager/portaria-format)))
+       (manager/concierge-format)))
 
 (defn command-handler
   "Function that will handler the CLI input"
   [command filepath]
   (m/match [command]
            ["--make-teams"] (team-maker-flow filepath)
-           ["--list-portaria"] (portaria-list-flow filepath)
+           ["--list-portaria"] (concierge-list-flow filepath)
            ["--h"] (println commands-string)
            [_] (print-help-invalid-command)))

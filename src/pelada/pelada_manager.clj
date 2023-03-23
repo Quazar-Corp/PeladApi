@@ -42,8 +42,8 @@
   (println)
   (println (format "Time 3:\n%s" (print-team t3))))
 
-(defn portaria-format
+(defn concierge-format
   "Prints a list formatted to send to the portaria"
   [pelada]
-  (doseq [x (:players pelada)]
-    (println x)))
+  (doseq [e (:players pelada)]
+    (println e)))
