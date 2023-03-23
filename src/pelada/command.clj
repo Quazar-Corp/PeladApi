@@ -3,6 +3,19 @@
   (:require [clojure.core.match :as m])
   (:require [pelada.pelada-manager :as manager]))
 
+(def commands-string
+  "\n\t--make-teams - Team selection (3 of 5)
+  \t--list-portaria - Format the list to send to portaria")
+  
+(defn print-help-invalid-command
+  []
+  (println "Invalid command! Available ones:\n" commands-string))
+
+(defn print-help-wrong-number-args
+  []
+  (println "Please give valid inputs:"
+           "\n\n\tlein run <command> <filepath>" commands-string))
+
 (defn team-maker-flow
   "Command flow to --make-teams"
   [filepath] 
@@ -20,10 +33,9 @@
 
 (defn command-handler
   "Function that will handler the CLI input"
-  [filepath command]
+  [command filepath]
   (m/match [command]
            ["--make-teams"] (team-maker-flow filepath)
            ["--list-portaria"] (portaria-list-flow filepath)
-           [""] (println "Please, use a command."
-                         "\n\t --make-teams - Team selection (3 of 5)"
-                         "\n\t --list-portaria - Format the list to send to portaria")))
+           ["--h"] (println commands-string)
+           [_] (print-help-invalid-command)))
