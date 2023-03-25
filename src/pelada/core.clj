@@ -1,12 +1,12 @@
 (ns pelada.core
- (:require [pelada.command :as cmd])) 
+ (:require [pelada.api :as api])) 
 
 (defn -main
   [& args]
   (if (< (count args) 2)
     (if (= (count args) 1)
-      (cmd/command-handler (nth args 0) "")
-      (cmd/print-help-wrong-number-args))
+      (api/command-handler (nth args 0) "")
+      (api/print-help-wrong-number-args))
     (let [command (nth args 0)
           filepath (nth args 1)]
-      (cmd/command-handler command filepath)))) 
+      (api/command-handler command filepath)))) 

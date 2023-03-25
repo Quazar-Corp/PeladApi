@@ -1,10 +1,10 @@
-(ns pelada.pelada-manager
-  (:require [pelada.list-handler :as list-handler]))
+(ns pelada.pelada-model
+  (:require [pelada.list-controller :as list-controller]))
 
 (defn to-pelada-object
-  "The manager abstracts the parser to pelada object"
+  "Abstracts the parser to pelada model"
   [filepath]
-  (list-handler/parser filepath))
+  (list-controller/parser filepath))
 
 (defn team-maker-random
   "THis functions is responbile to choice and remove the player

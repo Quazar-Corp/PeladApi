@@ -1,6 +1,6 @@
-(ns pelada.list-handler
+(ns pelada.list-controller
   (:require [clojure.string :as str])
-  (:require [clojure.core.match :as m]))
+  (:require [clojure.core.match :as matcher]))
 
 ; DEFAULT VALUES
 (def default_owner "Onofre")
@@ -66,7 +66,7 @@
 (defn- get-set-list
   "This function returns the sublist given the name of the set"
   [lines-list set-name]
-  (m/match [set-name]
+  (matcher/match [set-name]
            [:goalkeepers] (sublist lines-list "Goleiros" "Jogadores")
            [:players] (sublist lines-list "Jogadores" "Suplentes")
            [:substitutes] (sublist lines-list "Suplentes" "Convidados")
