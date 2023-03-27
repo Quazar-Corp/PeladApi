@@ -4,7 +4,7 @@
 
 (def commands-string
   "\n\t--make-teams - Team selection (3 of 5)
-  \t--list-concierge - Format the list to send to portaria
+  \t--list-concierge - Format the list to send to the concierge
   \t--h - Print the helps menu (this one)")
   
 (defn print-help-invalid-command
