@@ -1,10 +1,11 @@
 (ns pelada.api
   (:require [clojure.core.match :as matcher])
-  (:require [pelada.pelada-model :as model]))
+  (:require [pelada.controller :as controller]))
 
 (def commands-string
   "\n\t--make-teams - Team selection (3 of 5)
-  \t--list-portaria - Format the list to send to portaria")
+  \t--list-concierge - Format the list to send to the concierge
+  \t--h - Print the helps menu (this one)")
   
 (defn print-help-invalid-command
   []
@@ -19,16 +20,16 @@
   "Command flow to --make-teams"
   [filepath] 
   (->> filepath
-       (model/to-pelada-object)
-       (model/team-maker)
-       (model/print-teams)))
+       (controller/to-pelada)
+       (controller/make-teams)
+       (controller/print-teams)))
 
 (defn concierge-list-flow
-  "Command flow to --list-portaria"
+  "Command flow to --list-concierge"
   [filepath] 
   (->> filepath
-       (model/to-pelada-object)
-       (model/concierge-format)))
+       (controller/to-pelada)
+       (controller/print-formatted-list-to-concierge)))
 
 (defn command-handler
   "Function that will handler the CLI input"
