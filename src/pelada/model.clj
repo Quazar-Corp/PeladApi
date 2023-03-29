@@ -4,15 +4,23 @@
 (def default_hour "20hrs - 22hrs")
 (def default_day "Quarta")
 
+(defn- days-to-next-wednesday
+  "This functions calculates the day to next wednesday based on the current day"
+  [today]
+  (if (= today 3)
+    0
+    (if (< today 3)
+      (- 3 today)
+      (- 10 today)))
+  )
+
 (defn- get-next-wednesday
  "Retrieve the formatted date of the next Wednesday" 
   []
   (let [now (java.time.LocalDate/now (java.time.ZoneId/of "GMT-3"))
-        current-day-of-week (.getDayOfWeek now)
-        ; 7+3 (current + number of days for the next we) - current day 
-        days-to-next-wednesday (- 10 (.getValue current-day-of-week))
+        current-day-of-week (.getValue (.getDayOfWeek now))
         ; Math/max ensure that the number of days is positive
-        next-wednesday (.plusDays now (Math/max days-to-next-wednesday 0))
+        next-wednesday (.plusDays now (Math/max (days-to-next-wednesday current-day-of-week) 0))
         formatter (java.time.format.DateTimeFormatter/ofPattern "dd/MM")]
     (.format next-wednesday formatter)))
 
