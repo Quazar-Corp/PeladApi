@@ -3,7 +3,8 @@
   (:require [pelada.controller :as controller]))
 
 (def commands-string
-  "\n\t--make-teams - Team selection (3 of 5)
+  "\n\t--weekly-list - Generate the weekly list to send to the group
+  \t--make-teams - Team selection (3 of 5)
   \t--list-concierge - Format the list to send to the concierge
   \t--h - Print the helps menu (this one)")
   
@@ -31,10 +32,16 @@
        (controller/to-pelada)
        (controller/print-formatted-list-to-concierge)))
 
+(defn generate-weekly-list
+  "Command flow to --weekly-list"
+  []
+  (controller/generate-weekly-list))
+
 (defn command-handler
   "Function that will handler the CLI input"
   [command filepath]
   (matcher/match [command]
+           ["--weekly-list"] (generate-weekly-list)
            ["--make-teams"] (team-maker-flow filepath)
            ["--list-concierge"] (concierge-list-flow filepath)
            ["--server"] (println "Starting server...")
