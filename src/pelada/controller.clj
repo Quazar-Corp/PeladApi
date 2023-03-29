@@ -56,7 +56,7 @@
 (defn generate-weekly-list
   "Returns the weekly list with the updated date"
   []
-  (model/weekly-list))
+  (println (model/weekly-list)))
 
 (defn make-teams
   "Generate the 3 teams"
