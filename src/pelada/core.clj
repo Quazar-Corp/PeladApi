@@ -1,5 +1,6 @@
 (ns pelada.core
- (:require [pelada.api :as api])) 
+ (:require [pelada.api :as api])
+ (:gen-class)) 
 
 (defn -main
   [& args]
