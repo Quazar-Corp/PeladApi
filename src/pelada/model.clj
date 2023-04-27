@@ -1,4 +1,5 @@
 (ns pelada.model
+  (:require [clojure.java.io :as io])
   (:require [cheshire.core :as json])
   (:require [clojure.core.match :as matcher])
   (:require [clojure.string :as str]))
@@ -6,7 +7,7 @@
 (defn- read-setup
   "Read the setup from a local json file"
   []
-  (json/parse-string (slurp "setup.json") true))
+  (json/parse-string (slurp (io/resource "setup.json")) true))
 
 (defn- days-to-next-day
   "This functions calculates the day to next pelada day based on the current day"
