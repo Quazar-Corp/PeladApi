@@ -1,9 +1,16 @@
 (ns pelada.controller
-  (:require [pelada.model :as model])
+  (:require [clojure.java.io :as io])
+  (:require [cheshire.core :as json])
   (:require [clojure.string :as str])
+  (:require [pelada.model :as model])
   (:require [clojure.core.match :as matcher]))
   
 ; Parser Functions
+(defn- read-setup
+  "Read the setup from a local json file"
+  []
+  (json/parse-string (slurp (io/resource "setup.json")) true))
+
 (defn- remove-number-from-list
   "Remove the number of the player in the list"
   [string]
@@ -26,37 +33,44 @@
   "This function returns the sublist given the name of the set"
   [lines-list set-name]
   (matcher/match [set-name]
-           [:goalkeepers] (sublist lines-list "Goleiros" "Jogadores")
-           [:players] (sublist lines-list "Jogadores" "Suplentes")
-           [:substitutes] (sublist lines-list "Suplentes" "Convidados")
-           [:guests] (sublist lines-list "Convidados" "Comunicados")))
+           [:goalkeepers] (sublist lines-list "Goleiros:" "Linha:")
+           [:players] (sublist lines-list "Linha:" "Suplentes/Convidados:")
+           [:substitutes] (sublist lines-list "Suplentes/Convidados:" "Sub 15:")
+           [:minors] (sublist lines-list "Sub 15:")))
 
-(defn parser
+(defn- raw-list-pre-processing
+  [filepath]
+  (->> filepath
+       (slurp)
+       (str/trim)))
+
+(defn- cli-parser
   "This function exists because even that the application know the format of the list
   it can't just trust in the user, so this function will create format that will be
   legible to the application."
   [filepath]
-  (let [string-list (str/trim (slurp filepath)) ; TODO: error handling
+  ;(println (str (raw-list-pre-processing filepath) "\n|"))
+  (let [string-list (raw-list-pre-processing filepath) ; TODO: error handling
         lines-list (str/split-lines string-list)
         goalkeepers-list (get-set-list lines-list :goalkeepers)
         players-list (get-set-list lines-list :players)
         substitutes-list (get-set-list lines-list :substitutes)
-        guests-list (get-set-list lines-list :guests)]
+        minors-list (get-set-list lines-list :minors)]
     {:goalkeepers goalkeepers-list
      :players players-list
      :substitutes substitutes-list
-     :guests guests-list}))
+     :minors minors-list}))
 
 ; Controller Functions
 (defn to-pelada
   "Abstracts the parser to pelada model"
   [filepath]
-  (parser filepath))
+  (cli-parser filepath))
 
 (defn generate-weekly-list
   "Returns the weekly list with the updated date"
   []
-  (println (model/weekly-list)))
+  (println (model/weekly-list read-setup)))
 
 (defn make-teams
   "Generate the 3 teams"
