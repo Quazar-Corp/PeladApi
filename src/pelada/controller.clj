@@ -11,23 +11,47 @@
   []
   (json/parse-string (slurp (io/resource "setup.json")) true))
 
+(defn- is-player-empty?
+  [string]
+  (let [splitted-list (str/split string #"\.")
+        second-el (second splitted-list)
+        flag (= (not= second-el "") (not= second-el nil))]
+    flag))
+
 (defn- remove-number-from-list
   "Remove the number of the player in the list"
   [string]
   (->> (str/split string #"\.")
-       second))
+       second
+       str/trim))
+
+(defn- remove-check-emoji
+  [string]
+  (str/replace string #"✅" ""))
 
 (defn- sublist
   "The main function of the function get-set-list.
   Responsible for retrieve teh sublist and remove the head(set name)"
-  ([lines-list from] (rest (subvec lines-list (.indexOf lines-list from) (- (count lines-list) 1)))) 
+  ([lines-list from]
+   (->>
+     (subvec lines-list (.indexOf lines-list from) (- (count lines-list) 1))
+     (rest)
+     (filter #(not= % ""))
+     (filter #(not= % nil))
+     (filter is-player-empty?) ; In case it has a number but not the player name
+     (map remove-number-from-list) 
+     (map remove-check-emoji))) 
   ([lines-list from to] 
   (let [fromIndex (.indexOf lines-list from)
         toIndex (.indexOf lines-list to)]
-    (->> (subvec lines-list fromIndex toIndex)
-         (rest)
-         (filter #(not= % ""))
-         (map remove-number-from-list)))))
+    (->> 
+      (subvec lines-list fromIndex toIndex)
+      (rest)
+      (filter #(not= % ""))
+      (filter #(not= % nil))
+      (filter is-player-empty?) ; In case it has a number but not the player name
+      (map remove-number-from-list)
+      (map remove-check-emoji)))))
 
 (defn- get-set-list
   "This function returns the sublist given the name of the set"
