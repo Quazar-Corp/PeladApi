@@ -1,6 +1,7 @@
-(ns pelada.api
+(ns pelada.cli
   (:require [clojure.core.match :as matcher])
-  (:require [pelada.controller :as controller]))
+  (:require [pelada.controller :as controller])
+  (:require [pelada.api.server :as server]))
 
 (def commands-string
   "\n\t--weekly-list - Generate the weekly list to send to the group
@@ -37,6 +38,12 @@
   []
   (controller/generate-weekly-list))
 
+(defn start-server
+  "Command flot to --server"
+  []
+  (println "Starting server...")
+  (server/run-dev))
+
 (defn command-handler
   "Function that will handler the CLI input"
   [command filepath]
@@ -44,6 +51,6 @@
            ["--weekly-list"] (generate-weekly-list)
            ["--make-teams"] (team-maker-flow filepath)
            ["--list-concierge"] (concierge-list-flow filepath)
-           ["--server"] (println "Starting server...")
+           ["--server"] (start-server) 
            ["--h"] (println commands-string)
            [_] (print-help-invalid-command)))
