@@ -1,13 +1,6 @@
 (ns pelada.model
-  (:require [clojure.java.io :as io])
-  (:require [cheshire.core :as json])
   (:require [clojure.core.match :as matcher])
   (:require [clojure.string :as str]))
-
-(defn- read-setup
-  "Read the setup from a local json file"
-  []
-  (json/parse-string (slurp (io/resource "setup.json")) true))
 
 (defn- days-to-next-day
   "This functions calculates the day to next pelada day based on the current day"
@@ -45,28 +38,13 @@
   "Format the string with the given values"
   [date day hour owner place]
    (format 
-     "*Lista Pelada %s %s %s, %s
-     
-*Goleiros*
-1.
-2.
-
-*Jogadores*
-1. %s
-
-*Suplentes*
-1.
-
-*Convidados*
-1.
-
-*Comunicados*" 
+     "*Lista Pelada %s %s %s, %s*\n\n*Goleiros*\n1.\n2.\n\n*Jogadores*\n1. %s\n\n*Suplentes*\n1.\n\n*Convidados*\n1.\n\n*Sub 15*\n1." 
      day date place hour owner))
 
 (defn weekly-list
   "Generate the weekly list for the pelada"
-  []
-  (let [setup (read-setup)
+  [read-setup-func]
+  (let [setup (read-setup-func)
         owner (:owner setup)
         hour  (:hour setup)
         day   (:day setup)
@@ -112,5 +90,10 @@
 (defn concierge-format
   "Prints a list formatted to send to the concierge"
   [pelada]
-  (doseq [e (:players pelada)]
-    (println e)))
+  (let [goalkeepers (:goalkeepers pelada)
+        players (:players pelada)
+        substitutes (:substitutes pelada)
+        minors (:minors pelada)
+        full-list (vec (concat goalkeepers players substitutes minors))]
+    (doseq [player full-list]
+      (println player))))
