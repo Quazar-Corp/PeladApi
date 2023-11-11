@@ -92,8 +92,8 @@
   [pelada]
   (let [goalkeepers (:goalkeepers pelada)
         players (:players pelada)
-        substitutes (:substitutes pelada)
+        guests (:guests pelada)
         kids (:kids pelada)
-        full-list (vec (concat goalkeepers players substitutes kids))]
+        full-list (vec (concat goalkeepers players guests kids))]
     (doseq [player full-list]
       (println player))))
