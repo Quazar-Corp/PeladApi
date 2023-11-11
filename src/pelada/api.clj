@@ -19,17 +19,15 @@
 
 (defn team-maker-flow
   "Command flow to --make-teams"
-  [filepath] 
-  (->> filepath
-       (controller/to-pelada)
+  [] 
+  (->> (controller/get-pelada)
        (controller/make-teams)
        (controller/print-teams)))
 
 (defn concierge-list-flow
   "Command flow to --list-concierge"
-  [filepath] 
-  (->> filepath
-       (controller/to-pelada)
+  [] 
+  (->> (controller/get-pelada)
        (controller/print-formatted-list-to-concierge)))
 
 (defn generate-weekly-list
@@ -42,8 +40,8 @@
   [command filepath]
   (matcher/match [command]
            ["--weekly-list"] (generate-weekly-list)
-           ["--make-teams"] (team-maker-flow filepath)
-           ["--list-concierge"] (concierge-list-flow filepath)
+           ["--make-teams"] (team-maker-flow)
+           ["--list-concierge"] (concierge-list-flow)
            ["--server"] (println "Starting server...")
            ["--h"] (println commands-string)
            [_] (print-help-invalid-command)))
