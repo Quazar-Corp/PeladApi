@@ -3,10 +3,15 @@
   (:require [pelada.controller :as controller]))
 
 (def commands-string
-  "\n\t--weekly-list - Generate the weekly list to send to the group
+  "\n\t--validate-env - Check if pelada-parser is installed
+  \t--weekly-list - Generate the weekly list to send to the group
   \t--make-teams - Team selection (3 of 5)
   \t--list-concierge - Format the list to send to the concierge
   \t--h - Print the helps menu (this one)")
+
+(defn validate-environment
+  []
+  (controller/ensure-major-dependency))
   
 (defn print-help-invalid-command
   []
@@ -39,6 +44,7 @@
   "Function that will handler the CLI input"
   [command filepath]
   (matcher/match [command]
+           ["--validate-env"] (validate-environment)
            ["--weekly-list"] (generate-weekly-list)
            ["--make-teams"] (team-maker-flow)
            ["--list-concierge"] (concierge-list-flow)

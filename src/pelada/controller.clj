@@ -10,7 +10,7 @@
 
 (defn get-pelada
   []
-  (let [pelada (service/read-pelada)
+  (let [pelada (service/get-pelada)
         goalkeepers (:goalkeepers pelada)
         players (:players pelada)
         guests (:guests pelada)
@@ -19,6 +19,10 @@
      :players players
      :guests guests
      :kids kids}))
+
+(defn ensure-major-dependency
+  []
+  (service/ensure-major-dependency))
 
 (defn generate-weekly-list
   "Returns the weekly list with the updated date"
